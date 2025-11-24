@@ -2,10 +2,9 @@ use std::{
     collections::HashMap,
     sync::{Arc, Mutex}
 };
-use crate::{
-    users::{router::router::users_routes, model::User}
+use hvalfangst_rust_crud_with_axum::{
+    users::{router::users_routes, model::User}
 };
-mod users;
 
 #[tokio::main]
 async fn main() {

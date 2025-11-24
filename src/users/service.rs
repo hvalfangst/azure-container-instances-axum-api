@@ -8,19 +8,18 @@ pub async fn create_user(request: UpsertUser, shared_hashmap: &Arc<Mutex<HashMap
         panic!("Mutex lock failed");
     });
 
-    let email_clone = request.email.clone();
-    if let Some(_user) = acquired_map.get(&email_clone) {
+    if let Some(_user) = acquired_map.get(&request.email) {
         None
     } else {
         let new_user = User {
             id: (acquired_map.len() as i32) + 1,
-            email: email_clone.clone(),
+            email: request.email.clone(),
             password: request.password,
             fullname: request.fullname,
             role: request.role,
         };
-        acquired_map.insert(email_clone.clone(), new_user.clone());
-        Some(new_user.clone())
+        acquired_map.insert(request.email, new_user.clone());
+        Some(new_user)
     }
 }
 
@@ -41,7 +40,7 @@ pub async fn update_user_by_email(email: &String, request: UpsertUser, shared_ha
     match acquired_map.get(email) {
         Some(user) => {
             let updated_user = User {
-                id: user.id.clone(),
+                id: user.id,
                 email: user.email.clone(),
                 password: request.password,
                 fullname: request.fullname,
